@@ -8,3 +8,8 @@ html, body{
 	font-family: sans-serif;
 	text-align: center;
 }
+#map_canvas{
+	margin: 0 auto;
+	width: 90%;
+	height: 80%;
+}
