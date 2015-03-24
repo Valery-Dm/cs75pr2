@@ -11,5 +11,21 @@ html, body{
 #map_canvas{
 	margin: 20px auto;
 	width: 90%;
-	height: 80%;
+	height: 70%;
+}
+#menu{
+	margin: 5px auto;
+	width: 90%;
+	text-align: center;
+}
+.menu_item{
+	display: inline-block;
+	padding: 5px;
+	margin: 3px;
+	border-radius: 3px;
+	background-color: azure;
+}
+.menu_item:hover{
+	background-color: cadetblue;
+	color: azure;
 }

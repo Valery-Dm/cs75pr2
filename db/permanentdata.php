@@ -1,32 +1,5 @@
 <?php
-	/**
-	 * Open Database connection (via PDO).
-	 * @return PDO handler on success
-	 *  or false on error.
-	 *  Also log errors with current time into a file.
-	 */
-	function connectDB () {
-		// create time object
-		$time = new DateTime('NOW');
-		// open log file
-		$file = fopen('dberrors.log', 'a');
-
-		try {
-			// connect to database
-			$DBUSER = 'lampp';
-			$DBPASS = 'serveradmin';
-			$DSN = "mysql:host=localhost;dbname=cs75bart;";
-			$pdo = new PDO($DSN, $DBUSER, $DBPASS);
-		} catch (PDOException $e) {
-			// log errors
-			fwrite($file, $time->format('c') 
-					   . '>dbquery:code> ' 
-					   . $e->getCode() . "\n");
-			fclose($file);
-			return false;
-		}
-		return $pdo;
-	}
+	require_once('connectdb.php');
 
 	/**
 	 * Store permanent (or rarely changed) data
@@ -137,12 +110,26 @@
 		if (!$routes)
 			return "unable to load data";
 		$name_length = 0;
+		$route_stations = array();
 		foreach ($routes->routes->route as $rt) {
 			$name = strlen($rt->name);
 			if ($name > $name_length) {
 				$name_length = $name;
 			}
+			// get stations for each route
+			$url = 'http://api.bart.gov/api/route.aspx?cmd=routeinfo&route='
+					. $rt->number . '&key=MW9S-E7SL-26DU-VV8V';
+			$route_info = @simplexml_load_file($url);
+			if (!$route_info)
+				return "unable to load data";
+			//$route_stations[$rt->abbr] = $route_info->xpath('//station');
+			$route_stations[] = $route_info->routes->route->config->station;
 		}
+		//echo '<pre>';
+		$rtst_array = json_decode(json_encode((array)$route_stations), TRUE);
+		//var_dump($rtst_array);
+		//echo '</pre>';
+		//return;
 		// Connect to DB
 		$pdo = connectDB();
 		if (!$pdo)
@@ -151,16 +138,19 @@
 		$pdo->exec("ALTER TABLE routes
 					MODIFY name VARCHAR($name_length)");
 		$stmt = $pdo->prepare("INSERT INTO routes
-							(routeID, name, abbr, color)
-							VALUES (?, ?, ?, ?)");
+							(routeID, name, abbr, color, stations)
+							VALUES (?, ?, ?, ?, ?)");
+		$index = 0;
 		foreach ($routes->routes->route as $rt) {
 			$stmt->execute([$rt->number, $rt->name,
-						  $rt->abbr, $rt->color]);
+						  	$rt->abbr, $rt->color,
+						   	implode(',', $rtst_array[$index])]);
+			$index++;
 		}
 		$pdo = null;
 		// On success message
 		return 'data is loaded into DB';
 	}
-	//echo getStations();
+	echo getStations();
 	echo getRoutes();
 ?>
