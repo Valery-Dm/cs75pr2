@@ -1,5 +1,6 @@
 /**
  * All functionality is here.
+ * BART Key MW9S-E7SL-26DU-VV8V
  */
 var map = "",
 	marker = "",
@@ -16,7 +17,6 @@ initialize = function () {
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
 	map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-	//console.log(map);
 };
 
 addMarker = function () {
@@ -28,7 +28,7 @@ addMarker = function () {
 	marker.setMap(map);
 };
 
-addPolyline = function () {
+addPolyline = function (coords, color='#f00') {
 	"use strict";
 	var polylineCoordinates = [
 			new google.maps.LatLng(37.775362, -122.417564),
@@ -61,7 +61,7 @@ addInfoWindow = function () {
 window.onload = function () {
 	"use strict";
 	initialize();
-	addPolyline();
-	addMarker();
-	addInfoWindow();
+	//addPolyline();
+	//addMarker();
+	//addInfoWindow();
 };

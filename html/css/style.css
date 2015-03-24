@@ -9,7 +9,7 @@ html, body{
 	text-align: center;
 }
 #map_canvas{
-	margin: 0 auto;
+	margin: 20px auto;
 	width: 90%;
 	height: 80%;
 }
