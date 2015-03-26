@@ -42,11 +42,13 @@ addRouteWithMarkers = function (route) {
 	"use strict";
 	var routeCoordinates = [],
 		i,
-		point;
+		point,
+		stations = '';
 
 	// set route's name above the map
 	document.getElementById('route')
-			.innerHTML = route[0].name;
+			.innerHTML = route[0].routeID + ': ' + route[0].name;
+	
 	for (i in route[0].st) {
 		// set stations coordinates
 		point = new google.maps
@@ -61,7 +63,16 @@ addRouteWithMarkers = function (route) {
 				title: route[0].st[i][0].abbr
 			})
 		);
+		stations += 
+			'<div class="menu_item">' +
+			'<abbr title="' +
+			route[0].st[i][0].name +
+			'">' +
+			route[0].st[i][0].abbr +
+			'</abbr></div>';
 	}
+	document.getElementById('stations')
+			.innerHTML = stations;
 	routePath = new google.maps.Polyline({
 		path: routeCoordinates,
 		strokeColor: route[0].color,
@@ -105,8 +116,10 @@ addInfoWindow = function (marker, num) {
 	var infowindow = new google.maps.InfoWindow({
 		content: "<h1 style='color:blue'>" + marker.getTitle() + "</h1>"
 	});
+	
 	google.maps.event.addListener(marker, 'click', function () {
 		infowindow.open(map, marker);
+		map.panTo(marker.getPosition());
 	});
 };
 

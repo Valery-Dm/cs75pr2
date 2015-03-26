@@ -21,6 +21,7 @@
 			</div>
 		<?php endforeach ?></div>
 		<h3 id="route">Choose route</h3>
+		<div id="stations"></div>
 		<div id="map_canvas"></div>
 		<hr />
 		<p>&copy; dmv 2015</p>
