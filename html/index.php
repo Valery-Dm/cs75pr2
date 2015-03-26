@@ -15,8 +15,8 @@
 		<hr />
 		<div id="menu"><?php foreach ($routes as $route): ?>
 			<div class="menu_item">
-				<abbr title="<?= $route['name']; ?>">
-					Route <?= $route['routeID']; ?>
+				<abbr title="<?= htmlspecialchars($route['name']); ?>">
+					Route <?= htmlspecialchars($route['routeID']); ?>
 				</abbr>
 			</div>
 		<?php endforeach ?></div>
